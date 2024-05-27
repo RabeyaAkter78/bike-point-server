@@ -55,7 +55,7 @@ async function run() {
                 return res.status(404).send({ message: "invalid request" })
             }
             const result = await productCollection.insertOne(product);
-            console.log(product);
+            // console.log(product);
             res.send(result)
         });
         // Get All product:
@@ -97,6 +97,18 @@ async function run() {
             const result = await userCollection.deleteOne(query);
             res.send(result);
         });
+
+// delete products:
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await productCollection.deleteOne(query);
+            res.send(result);
+        });
+       
+
+
+     
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
