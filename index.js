@@ -26,6 +26,7 @@ async function run() {
         // Connect the client to the server
         await client.connect();
         const userCollection = client.db("bikePointDb").collection("user");
+        const productCollection = client.db("bikePointDb").collection("products");
 
         // Get User from db:
         app.get('/users', async (req, res) => {
@@ -44,6 +45,24 @@ async function run() {
             }
             const result = await userCollection.insertOne(user);
             res.send(result);
+        });
+
+        // add product :
+        app.post("/addProduct", async (req, res) => {
+            const product = req.body;
+            product.createdAt = new Date();
+            if (!product) {
+                return res.status(404).send({ message: "invalid request" })
+            }
+            const result = await productCollection.insertOne(product);
+            console.log(product);
+            res.send(result)
+        });
+        // Get All product:
+        app.get('/products', async (req, res) => {
+            const result = await productCollection.find().toArray();
+            res.send(result);
+
         });
 
 
