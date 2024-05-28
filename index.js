@@ -98,17 +98,36 @@ async function run() {
             res.send(result);
         });
 
-// delete products:
+        // delete products:
         app.delete('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await productCollection.deleteOne(query);
             res.send(result);
         });
-       
 
 
-     
+        
+        // Update products: 
+        app.patch("/products/:id", async (req, res) => {
+            const data = req.body;
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    bikeName: data.bikeName,
+                    bikePrice: data.bikePrice,
+                    bikeSpecification: data.bikeSpecification,
+                    condition: data.condition,
+                }
+            }
+
+            const result = await productCollection.updateOne(query, updatedDoc);
+            res.send(result)
+
+        })
+
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
